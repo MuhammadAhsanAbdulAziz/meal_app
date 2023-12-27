@@ -2,34 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:meal_app/models/meal_model.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class MealDetailScreen extends StatefulWidget {
-  const MealDetailScreen({required this.mealModel, super.key});
+class MealDetailScreen extends StatelessWidget {
+  const MealDetailScreen({required this.onToggleFavourite, required this.mealModel, super.key});
 
   final MealModel mealModel;
+  final void Function(MealModel _mealModel) onToggleFavourite;
   
-
-  @override
-  State<MealDetailScreen> createState() => _MealDetailScreenState();
-}
-
-class _MealDetailScreenState extends State<MealDetailScreen> {
-  var _onFavButtonPressed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.mealModel.title),
+        title: Text(mealModel.title),
         actions: [
           IconButton(onPressed: (){
-            setState(() {
-              if(_onFavButtonPressed == true){
-                _onFavButtonPressed = false;
-              }
-              else {
-                _onFavButtonPressed = true;
-              }
-            });
-          }, icon:_onFavButtonPressed ? const Icon(Icons.star):const Icon(Icons.star_border_outlined)), 
+            onToggleFavourite(mealModel);
+              // if(_onFavButtonPressed == true){
+              //   setState(() {
+              //     _onFavButtonPressed = false;
+              //   widget.onToggleFavourite(widget.mealModel);
+              //   });
+                
+              // }
+              // else {
+              //   setState(() {
+              //     _onFavButtonPressed = true;
+              //   widget.onToggleFavourite(widget.mealModel);
+              //   });
+                
+              // }
+          }, icon:const Icon(Icons.star)), 
         ],
       ),
       body: SingleChildScrollView(
@@ -37,7 +38,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           children: [
             FadeInImage(
               placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(widget.mealModel.imageUrl),
+              image: NetworkImage(mealModel.imageUrl),
             ),
             const SizedBox(height: 15,),
             Text(
@@ -48,7 +49,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   .copyWith(color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(height: 15,),
-            for (final ingredient in widget.mealModel.ingredients)
+            for (final ingredient in mealModel.ingredients)
               Text(
                 ingredient,
                 style: Theme.of(context)
@@ -65,7 +66,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   .copyWith(color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(height: 15,),
-            for (final step in widget.mealModel.steps)
+            for (final step in mealModel.steps)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical:5.0),
                 child: Text(
